@@ -29,11 +29,11 @@ function App() {
               <AboutSection />
               <BenefitsSection />
               <PaymentConditions />
+              <ContactForm />
               <ResultsSection />
               <ForYouSection />
               <LocationSection />
-              <FAQSection />
-              <ContactForm />
+              <FAQSection />            
               <Footer />
               <WhatsAppFloat />
               <CookieConsent />
