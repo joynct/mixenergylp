@@ -191,18 +191,7 @@ Payback Estimado: ${payback}`;
   };
 
   return (
-    <section id="contact-form" className="py-16 bg-gradient-to-br from-blue-950 to-blue-900 text-white">
-      {/* IMPORTANTE: Este é o formulário HTML que o Netlify detecta. */}
-      <form name="contact" data-netlify="true" hidden>
-        <input type="text" name="name" />
-        <input type="text" name="phone" />
-        <input type="text" name="city" />
-        <input type="text" name="state" />
-        <input type="text" name="billValue" />
-        <input type="text" name="installationType" />
-        <input type="text" name="verification" />
-      </form>
-        
+    <section id="contact-form" className="py-16 bg-gradient-to-br from-blue-950 to-blue-900 text-white">       
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
