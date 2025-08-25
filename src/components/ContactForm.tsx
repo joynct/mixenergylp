@@ -126,49 +126,48 @@ const ContactForm = () => {
     return Object.keys(newErrors).length === 0;
   };
   
- const handleFormSubmission = (e: FormEvent) => {
-  e.preventDefault();
-
-  if (validateForm()) {
-    // 1. Envia os dados para o Netlify
-    const myForm = e.target as HTMLFormElement;
-    const formData = new FormData(myForm);
+  const handleFormSubmission = (e: FormEvent) => {
+    e.preventDefault();
     
-    // Converte o FormData para um formato que o Netlify entende
-    fetch("/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(formData as any).toString(),
-    })
-    .then(() => console.log("Formulario enviado para o Netlify com sucesso!"))
-    .catch((error) => console.error("Erro ao enviar para o Netlify:", error));
-
-    // 2. Coleta os valores para o cálculo
-    const valorConta = parseFloat(formData.get('billValue') as string);
-    const estado = formData.get('state') as string;
-    const tipoInstalacao = formData.get('installationType') as string;
-
-    // 3. Executa os cálculos (mesma lógica de antes)
-    const dados = dadosEstados[estado];
-    const tarifa = dados[tipoInstalacao as keyof EstadoData];
-    const irradiacao = dados.irradiacao;
-    const custo = custoPorWp[tipoInstalacao];
-    const taxa = taxaDisponibilidade[tipoInstalacao];
-
-    const consumoMensal = valorConta / tarifa;
-    const consumoCompensavel = consumoMensal - (taxa / tarifa);
-    const potenciaNecessaria = consumoCompensavel / (irradiacao * 30 * fatorPerformance);
-    const investimentoTotal = potenciaNecessaria * 1000 * custo;
-    const economiaMensal = consumoCompensavel * tarifa;
-    const paybackAnos = investimentoTotal / (economiaMensal * 12);
-
-    setPotencia(formatNumber(potenciaNecessaria) + ' kWp');
-    setInvestimento(formatCurrency(investimentoTotal));
-    setEconomia(formatCurrency(economiaMensal));
-    setPayback(formatNumber(paybackAnos) + ' anos');
-    setShowResults(true);
-  }
-};
+    if (validateForm()) {
+      // 1. Envia os dados para o Netlify
+      const myForm = e.target as HTMLFormElement;
+      const formData = new FormData(myForm);
+      
+      fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData as any).toString(),
+      })
+      .then(() => console.log("Formulario enviado para o Netlify com sucesso!"))
+      .catch((error) => console.error("Erro ao enviar para o Netlify:", error));
+  
+      // 2. Coleta os valores para o cálculo
+      const valorConta = parseFloat(formData.get('billValue') as string);
+      const estado = formData.get('state') as string;
+      const tipoInstalacao = formData.get('installationType') as string;
+  
+      // 3. Executa os cálculos (mesma lógica de antes)
+      const dados = dadosEstados[estado];
+      const tarifa = dados[tipoInstalacao as keyof EstadoData];
+      const irradiacao = dados.irradiacao;
+      const custo = custoPorWp[tipoInstalacao];
+      const taxa = taxaDisponibilidade[tipoInstalacao];
+  
+      const consumoMensal = valorConta / tarifa;
+      const consumoCompensavel = consumoMensal - (taxa / tarifa);
+      const potenciaNecessaria = consumoCompensavel / (irradiacao * 30 * fatorPerformance);
+      const investimentoTotal = potenciaNecessaria * 1000 * custo;
+      const economiaMensal = consumoCompensavel * tarifa;
+      const paybackAnos = investimentoTotal / (economiaMensal * 12);
+  
+      setPotencia(formatNumber(potenciaNecessaria) + ' kWp');
+      setInvestimento(formatCurrency(investimentoTotal));
+      setEconomia(formatCurrency(economiaMensal));
+      setPayback(formatNumber(paybackAnos) + ' anos');
+      setShowResults(true);
+    }
+  };
 
   const handleSendToWhatsapp = () => {
     const message = `Olá! Gostaria de fazer uma simulação gratuita de energia solar.
@@ -193,17 +192,17 @@ Payback Estimado: ${payback}`;
 
   return (
     <section id="contact-form" className="py-16 bg-gradient-to-br from-blue-950 to-blue-900 text-white">
-   {/* Formulário HTML oculto para o Netlify */}
-    <form name="contact" data-netlify="true" hidden>
-      <input type="text" name="name" />
-      <input type="text" name="phone" />
-      <input type="text" name="city" />
-      <input type="text" name="state" />
-      <input type="text" name="billValue" />
-      <input type="text" name="installationType" />
-      <input type="text" name="verification" /> 
-    </form>
-      
+      {/* IMPORTANTE: Este é o formulário HTML que o Netlify detecta. */}
+      <form name="contact" data-netlify="true" hidden>
+        <input type="text" name="name" />
+        <input type="text" name="phone" />
+        <input type="text" name="city" />
+        <input type="text" name="state" />
+        <input type="text" name="billValue" />
+        <input type="text" name="installationType" />
+        <input type="text" name="verification" />
+      </form>
+        
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
@@ -215,29 +214,30 @@ Payback Estimado: ${payback}`;
               Preencha os dados abaixo e descubra quanto você pode economizar
             </p>
           </div>
-          
-<form
-          name="contact" 
-          method="POST"
-          data-netlify="true"
-          onSubmit={handleFormSubmission}
-          className="bg-white rounded-lg p-8 text-gray-900"
-        >
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                Nome completo *
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.name ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="Seu nome completo"
+            
+          {/* Este é o formulário visível que o usuário interage. */}
+          <form
+            name="contact" 
+            method="POST"
+            data-netlify="true"
+            onSubmit={handleFormSubmission}
+            className="bg-white rounded-lg p-8 text-gray-900"
+          >
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  Nome completo *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                    errors.name ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Seu nome completo"
                 />
                 {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
@@ -367,6 +367,7 @@ Payback Estimado: ${payback}`;
             </button>
           </form>
 
+          {/* Seção de resultados - permanece igual */}
           {showResults && (
             <div className="mt-8 p-8 bg-gradient-to-r from-[#74b9ff] to-[#0984e3] rounded-2xl text-white">
               <div className="text-center mb-6">
