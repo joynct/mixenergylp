@@ -126,21 +126,32 @@ const ContactForm = () => {
     return Object.keys(newErrors).length === 0;
   };
   
-  const handleFormSubmission = (e: FormEvent) => {
-    e.preventDefault();
-    
-    if (validateForm()) {
-      // 1. Envia os dados para o Netlify
-      const myForm = e.target as HTMLFormElement;
-      const formData = new FormData(myForm);
+const handleFormSubmission = (e: FormEvent) => {
+  e.preventDefault();
+
+  if (validateForm()) {
+    // 1. Envia os dados para o Netlify usando o URL raiz
+    const myForm = e.target as HTMLFormElement;
+    const formData = new FormData(myForm);
+
+    // Adiciona o nome do formulário ao FormData para garantir a submissão
+    formData.append("form-name", "contact");
       
-      fetch("/contact",  {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as any).toString(),
-      })
-      .then(() => console.log("Formulario enviado para o Netlify com sucesso!"))
-      .catch((error) => console.error("Erro ao enviar para o Netlify:", error));
+    fetch("/", {
+      method: "POST",
+      body: new URLSearchParams(formData as any).toString(),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    })
+    .then(response => {
+      if (!response.ok) {
+        console.error("Erro no envio para o Netlify:", response.status, response.statusText);
+      } else {
+        console.log("Formulario enviado para o Netlify com sucesso!");
+      }
+    })
+    .catch(error => {
+      console.error("Erro na requisição:", error);
+    });
   
       // 2. Coleta os valores para o cálculo
       const valorConta = parseFloat(formData.get('billValue') as string);
