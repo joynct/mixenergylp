@@ -126,31 +126,49 @@ const ContactForm = () => {
     return Object.keys(newErrors).length === 0;
   };
   
-  const handleCalculate = (e: FormEvent) => {
-    e.preventDefault();
-    
-    if (validateForm()) {
-      const valorConta = parseFloat(formData.billValue);
-      const dados = dadosEstados[formData.state];
-      const tarifa = dados[formData.installationType as keyof EstadoData];
-      const irradiacao = dados.irradiacao;
-      const custo = custoPorWp[formData.installationType];
-      const taxa = taxaDisponibilidade[formData.installationType];
+ const handleFormSubmission = (e: FormEvent) => {
+  e.preventDefault();
 
-      const consumoMensal = valorConta / tarifa;
-      const consumoCompensavel = consumoMensal - (taxa / tarifa);
-      const potenciaNecessaria = consumoCompensavel / (irradiacao * 30 * fatorPerformance);
-      const investimentoTotal = potenciaNecessaria * 1000 * custo;
-      const economiaMensal = consumoCompensavel * tarifa;
-      const paybackAnos = investimentoTotal / (economiaMensal * 12);
-      
-      setPotencia(formatNumber(potenciaNecessaria) + ' kWp');
-      setInvestimento(formatCurrency(investimentoTotal));
-      setEconomia(formatCurrency(economiaMensal));
-      setPayback(formatNumber(paybackAnos) + ' anos');
-      setShowResults(true);
-    }
-  };
+  if (validateForm()) {
+    // 1. Envia os dados para o Netlify
+    const myForm = e.target as HTMLFormElement;
+    const formData = new FormData(myForm);
+    
+    // Converte o FormData para um formato que o Netlify entende
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(formData as any).toString(),
+    })
+    .then(() => console.log("Formulario enviado para o Netlify com sucesso!"))
+    .catch((error) => console.error("Erro ao enviar para o Netlify:", error));
+
+    // 2. Coleta os valores para o cálculo
+    const valorConta = parseFloat(formData.get('billValue') as string);
+    const estado = formData.get('state') as string;
+    const tipoInstalacao = formData.get('installationType') as string;
+
+    // 3. Executa os cálculos (mesma lógica de antes)
+    const dados = dadosEstados[estado];
+    const tarifa = dados[tipoInstalacao as keyof EstadoData];
+    const irradiacao = dados.irradiacao;
+    const custo = custoPorWp[tipoInstalacao];
+    const taxa = taxaDisponibilidade[tipoInstalacao];
+
+    const consumoMensal = valorConta / tarifa;
+    const consumoCompensavel = consumoMensal - (taxa / tarifa);
+    const potenciaNecessaria = consumoCompensavel / (irradiacao * 30 * fatorPerformance);
+    const investimentoTotal = potenciaNecessaria * 1000 * custo;
+    const economiaMensal = consumoCompensavel * tarifa;
+    const paybackAnos = investimentoTotal / (economiaMensal * 12);
+
+    setPotencia(formatNumber(potenciaNecessaria) + ' kWp');
+    setInvestimento(formatCurrency(investimentoTotal));
+    setEconomia(formatCurrency(economiaMensal));
+    setPayback(formatNumber(paybackAnos) + ' anos');
+    setShowResults(true);
+  }
+};
 
   const handleSendToWhatsapp = () => {
     const message = `Olá! Gostaria de fazer uma simulação gratuita de energia solar.
@@ -202,7 +220,7 @@ Payback Estimado: ${payback}`;
           name="contact" 
           method="POST"
           data-netlify="true"
-          onSubmit={handleCalculate}
+          onSubmit={handleFormSubmission}
           className="bg-white rounded-lg p-8 text-gray-900"
         >
           <div className="grid md:grid-cols-2 gap-6">
