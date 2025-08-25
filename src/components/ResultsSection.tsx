@@ -235,10 +235,10 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
             <div className="hidden lg:block bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  L
+                  H
                 </div>
                 <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Lucia Ferreira</h4>
+                  <h4 className="font-semibold text-gray-900">Helio Henrrique Francisco da Silva</h4>
                   <div className="flex items-center space-x-1">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
@@ -249,11 +249,11 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
               <div className="relative">
                 <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
                 <p className="text-gray-700 text-sm leading-relaxed pl-4">
-                  "Equipe muito competente e prestativa. Explicaram todo o processo e me deixaram muito segura com o investimento."
+                  "A Mix Energy superou minhas expectativas! Atendimento rápido, produtos de qualidade e um ótimo custo-benefício. Recomendo de olhos fechados!"
                 </p>
               </div>
               <div className="mt-4 text-xs text-gray-500">
-                Há 5 dias
+                2 semanas atrás
               </div>
             </div>
           </div>
