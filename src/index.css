@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes print-up {
+  0% {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(20px);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes impact-reveal {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.3) rotate(-15deg);
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.2) rotate(5deg);
+    filter: blur(0px);
+  }
+  70% {
+    transform: translateX(-50%) scale(0.95) rotate(-2deg);
+  }
+  85% {
+    transform: translateX(-50%) scale(1.05) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+}
+
+@keyframes typewriter {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  0%, 50% {
+    border-color: transparent;
+  }
+  51%, 100% {
+    border-color: #f97316; /* Orange color for visibility */
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-print-up {
+  animation: print-up 2s ease-out forwards;
+  animation-delay: 0.5s;
+  clip-path: inset(100% 0 0 0);
+}
+
+.animate-impact-reveal {
+  animation: impact-reveal 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  animation-delay: 2.8s; /* Starts after the print-up animation completes */
+  opacity: 0;
+}
+
+.typewriter-text-white {
+  overflow: hidden;
+  border-right: 3px solid #f97316; /* Orange border */
+  white-space: nowrap;
+  margin: 0 auto;
+  width: 0;
+  animation: 
+    typewriter 3s steps(28, end) forwards,
+    blink-caret 0.75s step-end infinite;
+  animation-delay: 0.5s;
+}
+
+/* Animation to hide cursor after typewriter completes */
+.typewriter-text-white::after {
+  content: '';
+  animation: fade-out-cursor 0.1s ease-out forwards;
+  animation-delay: 3.5s; /* Hide cursor after typewriter completes */
+}
+
+@keyframes fade-out-cursor {
+  to {
+    border-color: transparent;
+  }
+}
+
+/* Remove cursor after animation completes */
+.typewriter-text-white.animation-complete {
+  border-right: none;
+}
+
+.fade-in-text {
+  opacity: 0;
+  animation: fade-in 1s ease-out forwards;
+}
+
+.fade-in-delay-1 {
+  animation-delay: 4s; /* After typewriter completes */
+}
+
+.fade-in-delay-2 {
+  animation-delay: 4.5s; /* Slightly after first fade-in */
+}
+
+/* Responsive typewriter for mobile */
+@media (max-width: 768px) {
+  .typewriter-text-white {
+    white-space: normal;
+    border-right: none;
+    animation: fade-in 1s ease-out forwards;
+    animation-delay: 0.5s;
+    width: auto;
+  }
+}
