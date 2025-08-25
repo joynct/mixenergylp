@@ -134,7 +134,7 @@ const ContactForm = () => {
       const myForm = e.target as HTMLFormElement;
       const formData = new FormData(myForm);
       
-      fetch("/", {
+      fetch("/contact",  {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams(formData as any).toString(),
