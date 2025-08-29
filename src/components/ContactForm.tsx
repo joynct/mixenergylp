@@ -189,7 +189,7 @@ Segue meus dados:
 - Estado: ${formData.state}
 - Tipo de Instalação: ${formData.installationType === 'residencial' ? 'Residencial' : formData.installationType === 'comercial' ? 'Comercial' : 'Industrial'}
 
----
+
 Resultados da simulação:
 - Potência Necessária: ${potencia}
 - Economia Mensal Estimada: ${economia}`;
