@@ -57,7 +57,7 @@ const taxaDisponibilidade: { [key: string]: number } = {
 };
 
 const fatorPerformance = 0.80;
-
+ 
 // Funções de formatação
 const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -180,26 +180,23 @@ const handleFormSubmission = (e: FormEvent) => {
     }
   };
 
-  const handleSendToWhatsapp = () => {
-    const message = `Olá! Gostaria de fazer uma simulação gratuita de energia solar.
-    
-Nome: ${formData.name}
-Telefone: ${formData.phone}
-Cidade: ${formData.city}
-Estado: ${formData.state}
-Valor médio da conta: R$ ${formData.billValue}
-Tipo de Instalação: ${formData.installationType === 'residencial' ? 'Residencial' : formData.installationType === 'comercial' ? 'Comercial' : 'Industrial'}
+const handleSendToWhatsapp = () => {
+  const message = `Olá! Meu nome é ${formData.name} e gostaria de fazer uma simulação gratuita de energia solar!
+
+Segue meus dados:
+- Telefone: ${formData.phone}
+- Cidade: ${formData.city}
+- Estado: ${formData.state}
+- Tipo de Instalação: ${formData.installationType === 'residencial' ? 'Residencial' : formData.installationType === 'comercial' ? 'Comercial' : 'Industrial'}
 
 ---
 Resultados da simulação:
-Potência Necessária: ${potencia}
-Investimento Estimado: ${investimento}
-Economia Mensal: ${economia}
-Payback Estimado: ${payback}`;
-    
-    const whatsappUrl = `https://wa.me/5564992170512?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-  };
+- Potência Necessária: ${potencia}
+- Economia Mensal Estimada: ${economia}`;
+
+  const whatsappUrl = `https://wa.me/5564992170512?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+};
 
   return (
     <section id="contact-form" className="py-16 bg-gradient-to-br from-blue-950 to-blue-900 text-white">       
@@ -367,30 +364,30 @@ Payback Estimado: ${payback}`;
             </button>
           </form>
 
-          {/* Seção de resultados - permanece igual */}
+          {/* Seção de resultados */}
           {showResults && (
             <div className="mt-8 p-8 bg-gradient-to-r from-[#74b9ff] to-[#0984e3] rounded-2xl text-white">
               <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold">Sua simulação está pronta!</h3>
-                <p>Confira os resultados e envie para o nosso WhatsApp para continuar</p>
+                <h3 className="text-2xl font-bold">SUA SIMULAÇÃO ESTÁ PRONTA!</h3>
+                <p>Confira o resultado e envie para o nosso Whatsapp para continuar o atendimento.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="bg-[rgba(255,255,255,0.15)] backdrop-blur-md p-5 rounded-xl border border-white/20">
                   <div className="text-xs uppercase opacity-80 tracking-wide">Potência Necessária</div>
                   <div className="text-3xl font-bold">{potencia}</div>
                 </div>
-                <div className="bg-[rgba(255,255,255,0.15)] backdrop-blur-md p-5 rounded-xl border border-white/20">
+               {/* <div className="bg-[rgba(255,255,255,0.15)] backdrop-blur-md p-5 rounded-xl border border-white/20">
                   <div className="text-xs uppercase opacity-80 tracking-wide">Investimento Estimado</div>
                   <div className="text-3xl font-bold">{investimento}</div>
-                </div>
+                </div> */}
                 <div className="bg-[rgba(255,255,255,0.15)] backdrop-blur-md p-5 rounded-xl border border-white/20">
-                  <div className="text-xs uppercase opacity-80 tracking-wide">Economia Mensal</div>
+                  <div className="text-xs uppercase opacity-80 tracking-wide">Economia Mensal Estimada</div>
                   <div className="text-3xl font-bold">{economia}</div>
                 </div>
-                <div className="bg-[rgba(255,255,255,0.15)] backdrop-blur-md p-5 rounded-xl border border-white/20">
+                {/* <div className="bg-[rgba(255,255,255,0.15)] backdrop-blur-md p-5 rounded-xl border border-white/20">
                   <div className="text-xs uppercase opacity-80 tracking-wide">Retorno do Investimento</div>
                   <div className="text-3xl font-bold">{payback}</div>
-                </div>
+                </div> */}
               </div>
               <button
                 onClick={handleSendToWhatsapp}
