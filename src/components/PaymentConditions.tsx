@@ -33,15 +33,7 @@ const PaymentConditions = () => {
           </p>
         </div>
         
-        <a
-          href="https://wa.me/5564992170512"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
-        >
-          <span>FAZER SIMULAÇÃO GRÁTIS NO WHATSAPP</span>
-          <ArrowRight className="h-5 w-5" />
-        </a>
+
       </div>
       
       {/* Gradient overlay at bottom - reduced height and positioned closer to content */}

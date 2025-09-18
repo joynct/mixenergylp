@@ -14,9 +14,10 @@ const Header = () => {
 
   const menuItems = [
     { label: 'Sobre nós', sectionId: 'about' },
-    { label: 'Projetos', sectionId: 'results' },
-    { label: 'Contato', sectionId: 'location' },
-    { label: 'Orçamento', sectionId: 'contact-form' }
+    { label: 'Simule seu sistema', sectionId: 'contact-form' },
+    { label: 'Projetos Concluídos', sectionId: 'results' },
+    { label: 'Localização', sectionId: 'location' }
+ 
   ];
 
   return (

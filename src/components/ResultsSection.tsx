@@ -1,27 +1,44 @@
-import React from 'react';
-import { MapPin, DollarSign, Clock, Star, Quote } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, DollarSign, Clock, Star, Quote, X } from 'lucide-react';
 
 const ResultsSection = () => {
+  const [modalImage, setModalImage] = useState<string | null>(null);
+
   const projects = [
     {
       client: "Restaurante Japa Chic",
+      image: "/projetos/japa-chic.JPG",
       location: "Rio Verde-GO",
-      savings: "R$ 2.600/mês",
-      delivery: "28 dias",
+      modules: 40,
+      savings: "R$ 2.500/mês",
+      generation: "2.800 kWh",
       rating: 5
     },
     {
-      client: "Fazenda Santa Clara",
-      location: "Jataí-GO",
-      savings: "R$ 4.200/mês",
-      delivery: "35 dias",
+      client: "Barão Bebida Gelada",
+      image: "/projetos/barao.JPG",
+      location: "Rio Verde-GO",
+      modules: 100,
+      savings: "R$ 7.200/mês",
+      generation: "7.500 kWh",
       rating: 5
     },
     {
-      client: "Residência Silva",
-      location: "Goiânia-GO",
-      savings: "R$ 680/mês",
-      delivery: "21 dias",
+      client: "Residência Morada do Sol",
+      image: "/projetos/residencia.JPG",
+      location: "Rio Verde-GO",
+      modules: 32,
+      savings: "R$ 2.200/mês",
+      generation: "2.400 kWh",
+      rating: 5
+    },
+    {
+      client: "Ki-Karnes",
+      image: "/projetos/ki-karnes.JPG",
+      location: "Rio Verde-GO",
+      modules: 50,
+      savings: "R$ 3.400/mês",
+      generation: "3.600 kWh",
       rating: 5
     }
   ];
@@ -36,38 +53,37 @@ const ResultsSection = () => {
           <p className="text-xl text-blue-200">Veja alguns dos nossos projetos entregues</p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {projects.map((project, index) => (
             <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="h-48 bg-gradient-to-br from-orange-400 to-yellow-400 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="bg-white rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                    <DollarSign className="h-10 w-10 text-green-600" />
-                  </div>
-                  <p className="text-white font-semibold text-lg">Projeto Concluído</p>
+              <div className="relative cursor-pointer group" onClick={() => setModalImage(project.image)}>
+                <img
+                  src={project.image}
+                  alt={project.client}
+                  className="w-full h-48 object-cover group-hover:opacity-80 transition"
+                />
+                <div className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded text-xs">
+                  Clique para ampliar
                 </div>
               </div>
-              
               <div className="p-6">
                 <h3 className="text-xl font-bold text-blue-950 mb-3">{project.client}</h3>
-                
                 <div className="space-y-2 mb-4">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="flex items-center space-x-2 text-sm text-gray-600 font-semibold">
                     <MapPin className="h-4 w-4" />
                     <span>{project.location}</span>
                   </div>
-                  
-                  <div className="flex items-center space-x-2 text-sm text-green-600 font-semibold">
-                    <DollarSign className="h-4 w-4" />
-                    <span>Economia: {project.savings}</span>
+                  <div className="flex items-center space-x-2 text-sm text-orange-600 font-semibold">
+                    <span>Módulos:</span>
+                    <span className="font-semibold">{project.modules}</span>
                   </div>
-                  
-                  <div className="flex items-center space-x-2 text-sm text-blue-600">
-                    <Clock className="h-4 w-4" />
-                    <span>Entrega: {project.delivery}</span>
+                  <div className="flex items-center space-x-2 text-sm text-green-600 font-semibold">
+                    <span>Economia Estimada: {project.savings}</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-blue-600 font-semibold">                  
+                    <span>Geração: {project.generation}</span>
                   </div>
                 </div>
-                
                 <div className="flex items-center space-x-1">
                   {[...Array(project.rating)].map((_, i) => (
                     <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
@@ -78,6 +94,22 @@ const ResultsSection = () => {
             </div>
           ))}
         </div>
+
+        {/* Modal de imagem ampliada */}
+        {modalImage && (
+          <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+            <div className="relative">
+              <button
+                className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-gray-200"
+                onClick={() => setModalImage(null)}
+                aria-label="Fechar"
+              >
+                <X className="h-6 w-6 text-gray-800" />
+              </button>
+              <img src={modalImage} alt="Projeto ampliado" className="max-w-[90vw] max-h-[80vh] rounded-lg shadow-lg" />
+            </div>
+          </div>
+        )}
         
         {/* Google Reviews Social Proof Section */}
         <div className="mt-16 pt-16 border-t border-blue-800">
@@ -117,13 +149,10 @@ const ResultsSection = () => {
               </div>
               <div className="relative">
                 <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4">
-                  "Excelente experiência com a mix Energy! A equipe foi super atenciosa e profissional. O sistema de energia solar instalado é de alta qualidade e já estou economizando na conta de luz.
-Funcionários educados , prazo de entrega rápido e serviço de qualidade . Recomendo muito!💡"
+                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
+                         Excelente experiência com a Mix Energy! A equipe foi super atenciosa e profissional. O sistema de energia solar instalado é de alta qualidade e já estou economizando na conta de luz.
+Funcionários educados , prazo de entrega rápido e serviço de qualidade . Recomendo muito!💡
                 </p>
-              </div>
-              <div className="mt-4 text-xs text-gray-500">
-                Há 2 semanas
               </div>
             </div>
             
@@ -144,12 +173,9 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
               </div>
               <div className="relative">
                 <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4">
-                  "Ótimo atendimento, entrega no prazo combinado, preço bem acessível 🔝"
+                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
+                  Ótimo atendimento, entrega no prazo combinado, preço bem acessível 🔝
                 </p>
-              </div>
-              <div className="mt-4 text-xs text-gray-500">
-                Há 6 meses
               </div>
             </div>
             
@@ -170,12 +196,9 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
               </div>
               <div className="relative">
                 <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4">
-                  "Serviço de procedência! Recomendo Mix Energy solar.."
+                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
+                  Serviço de procedência! Recomendo Mix Energy solar..
                 </p>
-              </div>
-              <div className="mt-4 text-xs text-gray-500">
-                Há 6 meses
               </div>
             </div>
             
@@ -196,12 +219,9 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
               </div>
               <div className="relative">
                 <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4">
-                  "Bom atendimento ótimo trabalho profissional excelente"
+                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
+                  Bom atendimento ótimo trabalho profissional excelente
                 </p>
-              </div>
-              <div className="mt-4 text-xs text-gray-500">
-                Há 1 semana
               </div>
             </div>
             
@@ -222,12 +242,9 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
               </div>
               <div className="relative">
                 <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4">
-                  "Ótimo atendimento, uma empresa que entrega o nosso pedido no prazo certo e um sistema de qualidade, ótima equipe de instalação, recomendo muito porque agora o sol gera minha energia graças a mix energy😉Ótima experiência !"
+                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
+                  Ótimo atendimento, uma empresa que entrega o nosso pedido no prazo certo e um sistema de qualidade, ótima equipe de instalação, recomendo muito porque agora o sol gera minha energia graças a mix energy😉Ótima experiência !
                 </p>
-              </div>
-              <div className="mt-4 text-xs text-gray-500">
-                Há 4 dias
               </div>
             </div>
             
@@ -248,12 +265,9 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
               </div>
               <div className="relative">
                 <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4">
-                  "A Mix Energy superou minhas expectativas! Atendimento rápido, produtos de qualidade e um ótimo custo-benefício. Recomendo de olhos fechados!"
+                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
+                  A Mix Energy superou minhas expectativas! Atendimento rápido, produtos de qualidade e um ótimo custo-benefício. Recomendo de olhos fechados!
                 </p>
-              </div>
-              <div className="mt-4 text-xs text-gray-500">
-                2 semanas atrás
               </div>
             </div>
           </div>
