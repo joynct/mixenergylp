@@ -194,7 +194,7 @@ Resultados da simulação:
 - Potência Necessária: ${potencia}
 - Economia Mensal Estimada: ${economia}`;
 
-  const whatsappUrl = `https://wa.me/5564992170512?text=${encodeURIComponent(message)}`;
+  const whatsappUrl = `https://api.whatsapp.com/send/?phone=5564992170512&text=Ol%C3%A1%2C+tudo+bem%3F+Vim+pelo+site+da+Mix+Energy+e+gostaria+de+fazer+um+or%C3%A7amento.&type=phone_number&app_absent=0`;
   window.open(whatsappUrl, '_blank');
 };
 

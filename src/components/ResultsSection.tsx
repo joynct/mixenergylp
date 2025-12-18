@@ -278,7 +278,7 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
               Seja você também um cliente satisfeito!
             </p>
             <a
-              href="https://wa.me/5564992170512"
+              href="https://api.whatsapp.com/send/?phone=5564992170512&text=Ol%C3%A1%2C+tudo+bem%3F+Vim+pelo+site+da+Mix+Energy+e+gostaria+de+fazer+um+or%C3%A7amento.&type=phone_number&app_absent=0"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg"

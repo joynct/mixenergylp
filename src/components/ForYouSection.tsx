@@ -40,7 +40,7 @@ const ForYouSection = () => {
         </div>
         
         <a
-          href="https://wa.me/5564992170512"
+          href="https://api.whatsapp.com/send/?phone=5564992170512&text=Ol%C3%A1%2C+tudo+bem%3F+Vim+pelo+site+da+Mix+Energy+e+gostaria+de+fazer+um+or%C3%A7amento.&type=phone_number&app_absent=0"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center space-x-2 bg-blue-950 hover:bg-blue-900 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
