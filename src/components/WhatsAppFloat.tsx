@@ -1,30 +1,42 @@
-import React from 'react';
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'dotlottie-wc': any;
-    }
-  }
-}
+import { useEffect, useRef } from 'react';
+import type { AnimationItem } from 'lottie-web';
+import { WHATSAPP_URL } from '../config';
 
 const WhatsAppFloat = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // A animação roda localmente (sem serviços externos) e é carregada sob demanda
+  useEffect(() => {
+    let animation: AnimationItem | undefined;
+    let cancelled = false;
+
+    import('lottie-web/build/player/lottie_light').then(({ default: lottie }) => {
+      if (cancelled || !containerRef.current) return;
+      animation = lottie.loadAnimation({
+        container: containerRef.current,
+        renderer: 'svg',
+        loop: true,
+        autoplay: true,
+        path: '/whatsapp-animation.json',
+      });
+    });
+
+    return () => {
+      cancelled = true;
+      animation?.destroy();
+    };
+  }, []);
+
   return (
     <a
-      href="https://api.whatsapp.com/send/?phone=5564992170512&text=Ol%C3%A1%2C+tudo+bem%3F+Vim+pelo+site+da+Mix+Energy+e+gostaria+de+fazer+um+or%C3%A7amento.&type=phone_number&app_absent=0"
+      href={WHATSAPP_URL}
       target="_blank"
       rel="noopener noreferrer"
       className="fixed bottom-6 right-6 z-50"
       title="Fale conosco no WhatsApp"
+      aria-label="Fale conosco no WhatsApp"
     >
-      <dotlottie-wc 
-        src="https://lottie.host/41b3326f-64f5-47c3-875a-9d877a274565/ueFoEjD7pI.lottie" 
-        renderer="svg"
-        style={{width: '80px', height: '80px'}} 
-        speed="1" 
-        autoplay 
-        loop
-      />
+      <div ref={containerRef} style={{ width: '80px', height: '80px' }} />
     </a>
   );
 };

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { WHATSAPP_URL } from '../config';
 
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -32,12 +33,23 @@ const FAQSection = () => {
     },
    ];
 
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  };
+
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
     <section className="py-16 bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-blue-950 mb-4">
@@ -50,6 +62,7 @@ const FAQSection = () => {
             <div key={index} className="bg-white border border-gray-200 rounded-lg shadow-sm">
               <button
                 onClick={() => toggleFAQ(index)}
+                aria-expanded={openIndex === index}
                 className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
               >
                 <span className="text-lg font-semibold text-blue-950">{faq.question}</span>
@@ -70,7 +83,7 @@ const FAQSection = () => {
         
         <div className="text-center">
           <a
-            href="https://api.whatsapp.com/send/?phone=5564992170512&text=Ol%C3%A1%2C+tudo+bem%3F+Vim+pelo+site+da+Mix+Energy+e+gostaria+de+fazer+um+or%C3%A7amento.&type=phone_number&app_absent=0"
+            href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg"

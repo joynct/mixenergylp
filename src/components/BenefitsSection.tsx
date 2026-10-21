@@ -1,4 +1,3 @@
-import React from 'react';
 import { TrendingDown, DollarSign, Home, Zap, Leaf } from 'lucide-react';
 
 const BenefitsSection = () => {

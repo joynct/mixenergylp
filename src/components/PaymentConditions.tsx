@@ -1,5 +1,4 @@
-import React from 'react';
-import { Calendar, CreditCard, ArrowRight } from 'lucide-react';
+import { Calendar, CreditCard } from 'lucide-react';
 
 const PaymentConditions = () => {
   return (

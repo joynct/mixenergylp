@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mixenergysolar.com.br/sitemap.xml

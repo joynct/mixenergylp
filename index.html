@@ -2,24 +2,38 @@
 <html lang="pt-BR">
   <head>
     
-<!-- Google tag (gtag.js) analytics-joy -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5RG1L3929W"></script>
+<!-- Consent Mode v2: estado inicial lido do consentimento salvo (padrão: negado) -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  window.gtag = gtag;
+  (function () {
+    var c = null;
+    try { c = JSON.parse(localStorage.getItem('cookie-consent')); } catch (e) {}
+    var valido = c && c.timestamp && (Date.now() - new Date(c.timestamp).getTime() < 31536000000);
+    var a = valido && c.analytics ? 'granted' : 'denied';
+    var m = valido && c.marketing ? 'granted' : 'denied';
+    gtag('consent', 'default', {
+      analytics_storage: a,
+      ad_storage: m,
+      ad_user_data: m,
+      ad_personalization: m,
+      wait_for_update: 500
+    });
+    window.__marketingConsent = m === 'granted';
+  })();
+</script>
 
+<!-- Google tag (gtag.js) analytics-joy -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5RG1L3929W"></script>
+<script>
+  gtag('js', new Date());
   gtag('config', 'G-5RG1L3929W');
 </script>
 
 <!-- Google tag (gtag.js) ads -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17791611406">
-</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17791611406"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
   gtag('config', 'AW-17791611406');
 </script>
 
@@ -31,7 +45,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-5JBSDMJM');</script>
 <!-- End Google Tag Manager -->
 
-<!-- Meta Pixel Code -->
+<!-- Meta Pixel Code (consentimento respeitado) -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -41,10 +55,10 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
+fbq('consent', window.__marketingConsent ? 'grant' : 'revoke');
 fbq('init', '3783306491811674');
 fbq('track', 'PageView');
 </script>
-
 <!-- End Meta Pixel Code -->
 
     <meta charset="UTF-8" />
@@ -57,16 +71,18 @@ fbq('track', 'PageView');
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- SEO Meta Tags -->
-    <title>Mix Energy - Economize com Energi Solar </title>
+    <title>Mix Energy - Economize com Energia Solar</title>
     <meta name="description" content="Energia solar em Rio Verde GO com economia até 95%. Financiamento 120x, carência 120 dias. Instalação rápida e pós-venda garantido. Orçamento grátis!" />
-    <meta name="keywords" content="energia solar Rio Verde, painéis solares Goiás, economia energia elétrica, energia solar financiamento, Mix Energy Solar, sustentabilidade GO" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mixenergysolar.com.br/" />
     <meta property="og:title" content="Energia Solar Rio Verde GO - Economize 95% | Mix Energy" />
     <meta property="og:description" content="Energia solar em Rio Verde GO com economia até 95%. Financiamento 120x, carência 120 dias. Instalação rápida e pós-venda garantido." />
-    <meta property="og:image" content="https://mixenergysolar.com.br/favicon mix energy.png" />
+    <meta property="og:image" content="https://mixenergysolar.com.br/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Mix Energy Solar" />
     <meta property="og:locale" content="pt_BR" />
     
     <!-- Twitter -->
@@ -74,7 +90,7 @@ fbq('track', 'PageView');
     <meta property="twitter:url" content="https://mixenergysolar.com.br/" />
     <meta property="twitter:title" content="Energia Solar Rio Verde GO - Economize 95% | Mix Energy" />
     <meta property="twitter:description" content="Energia solar em Rio Verde GO com economia até 95%. Financiamento 120x, carência 120 dias." />
-    <meta property="twitter:image" content="https://mixenergysolar.com.br/favicon mix energy.png" />
+    <meta property="twitter:image" content="https://mixenergysolar.com.br/og-image.png" />
     
     <!-- Additional SEO -->
     <meta name="robots" content="index, follow" />
@@ -99,7 +115,14 @@ fbq('track', 'PageView');
     {
       "@context": "https://schema.org",
       "@type": "LocalBusiness",
+      "@id": "https://mixenergysolar.com.br/#negocio",
       "name": "Mix Energy Solar",
+      "image": "https://mixenergysolar.com.br/og-image.png",
+      "logo": "https://mixenergysolar.com.br/mix%20energy%20logo%20preto.png",
+      "sameAs": [
+        "https://instagram.com/mixenergysolar",
+        "https://share.google/k1slV7ZMrF8afKDJG"
+      ],
       "description": "Empresa especializada em energia solar com instalação rápida e economia de até 95% na conta de luz",
       "url": "https://mixenergysolar.com.br",
       "telephone": "+55-64-99217-0512",
@@ -118,9 +141,9 @@ fbq('track', 'PageView');
       },
       "openingHours": "Mo-Fr 08:00-18:00",
       "priceRange": "$$",
-      "serviceArea": {
-        "@type": "State",
-        "name": "Goiás"
+      "areaServed": {
+        "@type": "Country",
+        "name": "Brasil"
       },
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
@@ -140,19 +163,14 @@ fbq('track', 'PageView');
     </script>
   </head>
   <body>
-    <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5JBSDMJM');</script>
-<!-- End Google Tag Manager -->
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5JBSDMJM"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     
     <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=3783306491811674&ev=PageView&noscript=1"
 /></noscript>
-
-    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.6.2/dist/dotlottie-wc.js" type="module"></script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

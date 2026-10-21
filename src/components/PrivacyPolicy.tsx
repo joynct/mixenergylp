@@ -1,5 +1,4 @@
-import React from 'react';
-import { Shield, Mail, Phone, MapPin, Calendar, FileText, Users, Lock, Eye, Download, ArrowLeft } from 'lucide-react';
+import { Shield, Mail, Phone, MapPin, Calendar, FileText, Users, Lock, Eye, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const PrivacyPolicy = () => {
@@ -23,7 +22,8 @@ const PrivacyPolicy = () => {
             Política de Privacidade
           </h1>
           <p className="text-lg text-gray-600">
-            Mix Energy Solar - Última atualização: Janeiro de 2025
+            Mix Energy LTDA (Mix Energy Solar) - CNPJ 54.882.666/0001-40<br />
+            Última atualização: Outubro de 2026
           </p>
         </div>
 
@@ -34,7 +34,7 @@ const PrivacyPolicy = () => {
               1. Informações Gerais
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              A Mix Energy Solar, pessoa jurídica de direito privado, com sede na Av. Pedro Ludovico Teixeira, 16 - lt07/08 - parte c, 
+              A Mix Energy Solar, nome fantasia de Mix Energy LTDA, pessoa jurídica de direito privado inscrita no CNPJ sob o nº 54.882.666/0001-40, com sede na Av. Pedro Ludovico Teixeira, 16 - lt07/08 - parte c, 
               Rio Verde - GO, CEP 75906-270, doravante denominada "Mix Energy" ou "Empresa", 
               está comprometida em proteger a privacidade e os dados pessoais de nossos clientes, prospects e visitantes do site.
             </p>

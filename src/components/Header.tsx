@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
 const Header = () => {
@@ -29,6 +29,8 @@ const Header = () => {
             <img 
               src="/mix energy logo preto.png" 
               alt="Mix Energy Solar" 
+              width={547}
+              height={261}
               className="h-[68px] w-auto"
             />
           </div>
@@ -51,6 +53,8 @@ const Header = () => {
           <div className="flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label={isMenuOpen ? 'Fechar menu' : 'Abrir menu'}
+              aria-expanded={isMenuOpen}
               className="md:hidden text-blue-950 hover:text-orange-500 transition-colors"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
