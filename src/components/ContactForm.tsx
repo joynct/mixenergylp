@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { useState, useRef, FormEvent, ChangeEvent } from 'react';
 import { Send, Calculator } from 'lucide-react';
 import { buildWhatsAppUrl } from '../config';
 
@@ -101,6 +101,8 @@ const ContactForm = () => {
   const [showResults, setShowResults] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [consent, setConsent] = useState(false);
+  // Assinatura dos últimos dados enviados com sucesso (evita lead duplicado)
+  const lastSentRef = useRef<string | null>(null);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -137,27 +139,33 @@ const ContactForm = () => {
     e.preventDefault();
     if (submitting || !validateForm()) return;
 
-    setSubmitting(true);
-
-    // 1. Envia os dados para o Netlify (que encaminha o lead por e-mail)
+    // 1. Envia os dados para o Netlify (que encaminha o lead por e-mail),
+    //    exceto se forem idênticos ao último envio (ex.: cliquei em calcular de novo)
     const myForm = e.target as HTMLFormElement;
     const data = new FormData(myForm);
-    data.append('form-name', 'contact');
+    const signature = new URLSearchParams(data as unknown as Record<string, string>).toString();
 
-    fetch('/', {
-      method: 'POST',
-      body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          console.error('Erro no envio para o Netlify:', response.status, response.statusText);
-        }
+    if (signature !== lastSentRef.current) {
+      setSubmitting(true);
+      data.append('form-name', 'contact');
+
+      fetch('/', {
+        method: 'POST',
+        body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       })
-      .catch((error) => {
-        console.error('Erro na requisição:', error);
-      })
-      .finally(() => setSubmitting(false));
+        .then((response) => {
+          if (response.ok) {
+            lastSentRef.current = signature;
+          } else {
+            console.error('Erro no envio para o Netlify:', response.status, response.statusText);
+          }
+        })
+        .catch((error) => {
+          console.error('Erro na requisição:', error);
+        })
+        .finally(() => setSubmitting(false));
+    }
 
     // 2. Coleta os valores para o cálculo
     const valorConta = parseFloat(data.get('billValue') as string);
