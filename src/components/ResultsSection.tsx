@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
-import { MapPin, DollarSign, Clock, Star, Quote, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { MapPin, Star, Quote, X } from 'lucide-react';
+import { GOOGLE_REVIEWS_URL, WHATSAPP_URL } from '../config';
 
 const ResultsSection = () => {
   const [modalImage, setModalImage] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!modalImage) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setModalImage(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [modalImage]);
+
   const projects = [
     {
       client: "Restaurante Japa Chic",
-      image: "/projetos/japa-chic.JPG",
+      image: "/projetos/japa-chic.webp",
       location: "Rio Verde-GO",
       modules: 40,
       savings: "R$ 2.500/mês",
@@ -16,7 +26,7 @@ const ResultsSection = () => {
     },
     {
       client: "Barão Bebida Gelada",
-      image: "/projetos/barao.JPG",
+      image: "/projetos/barao.webp",
       location: "Rio Verde-GO",
       modules: 100,
       savings: "R$ 7.200/mês",
@@ -25,7 +35,7 @@ const ResultsSection = () => {
     },
     {
       client: "Residência Morada do Sol",
-      image: "/projetos/residencia.JPG",
+      image: "/projetos/residencia.webp",
       location: "Rio Verde-GO",
       modules: 32,
       savings: "R$ 2.200/mês",
@@ -34,7 +44,7 @@ const ResultsSection = () => {
     },
     {
       client: "Ki-Karnes",
-      image: "/projetos/ki-karnes.JPG",
+      image: "/projetos/ki-karnes.webp",
       location: "Rio Verde-GO",
       modules: 50,
       savings: "R$ 3.400/mês",
@@ -44,7 +54,7 @@ const ResultsSection = () => {
   ];
 
   return (
-    <section id="results" className="py-16 bg-blue-950">
+    <section id="results" className="py-16 bg-blue-950 scroll-mt-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -60,6 +70,9 @@ const ResultsSection = () => {
                 <img
                   src={project.image}
                   alt={project.client}
+                  width={1600}
+                  height={900}
+                  loading="lazy"
                   className="w-full h-48 object-cover group-hover:opacity-80 transition"
                 />
                 <div className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded text-xs">
@@ -97,8 +110,14 @@ const ResultsSection = () => {
 
         {/* Modal de imagem ampliada */}
         {modalImage && (
-          <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-            <div className="relative">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Projeto ampliado"
+            onClick={() => setModalImage(null)}
+          >
+            <div className="relative" onClick={(e) => e.stopPropagation()}>
               <button
                 className="absolute top-2 right-2 bg-white rounded-full p-2 shadow hover:bg-gray-200"
                 onClick={() => setModalImage(null)}
@@ -117,11 +136,21 @@ const ResultsSection = () => {
             <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
              O que estão falando da Mix Energy
             </h3>
-            <img 
-              src="/Google Logo.png" 
-              alt="Google Logo" 
-              className="mx-auto mb-4 h-8 w-auto"
-            />
+            <a
+              href={GOOGLE_REVIEWS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+              aria-label="Ver avaliações da Mix Energy no Google"
+            >
+              <img 
+                src="/Google Logo.png" 
+                alt="Google Logo" 
+                width={1280}
+                height={433}
+                className="mx-auto mb-4 h-8 w-auto"
+              />
+            </a>
             <div className="flex items-center justify-center space-x-1 mb-4">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="h-8 w-8 text-yellow-400 fill-current" />
@@ -248,8 +277,8 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
               </div>
             </div>
             
-            {/* Placeholder for 6th review - hidden on mobile, shown on larger screens */}
-            <div className="hidden lg:block bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+            {/* 6º depoimento - oculto só no celular (1 coluna); aparece a partir de tablet para fechar a grade */}
+            <div className="hidden md:block bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
                   H
@@ -278,7 +307,7 @@ Funcionários educados , prazo de entrega rápido e serviço de qualidade . Reco
               Seja você também um cliente satisfeito!
             </p>
             <a
-              href="https://api.whatsapp.com/send/?phone=5564992170512&text=Ol%C3%A1%2C+tudo+bem%3F+Vim+pelo+site+da+Mix+Energy+e+gostaria+de+fazer+um+or%C3%A7amento.&type=phone_number&app_absent=0"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg"

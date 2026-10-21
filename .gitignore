@@ -23,3 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Pastas locais (não vão para o repositório)
+_backup_antes_das_correcoes
+originais

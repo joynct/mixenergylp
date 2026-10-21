@@ -1,5 +1,4 @@
-import React from 'react';
-import { Cookie, Mail, Phone, MapPin, Settings, Eye, Shield, Users, ArrowLeft } from 'lucide-react';
+import { Cookie, Mail, Phone, MapPin, Settings, Eye, Shield, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const CookiePolicy = () => {
@@ -23,7 +22,8 @@ const CookiePolicy = () => {
             Política de Cookies
           </h1>
           <p className="text-lg text-gray-600">
-            Mix Energy Solar - Última atualização: Janeiro de 2025
+            Mix Energy LTDA (Mix Energy Solar) - CNPJ 54.882.666/0001-40<br />
+            Última atualização: Outubro de 2026
           </p>
         </div>
 

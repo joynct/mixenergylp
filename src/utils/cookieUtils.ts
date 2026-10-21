@@ -50,7 +50,7 @@ export const clearNonEssentialCookies = (): void => {
     // Clear analytics cookies (Google Analytics, etc.)
     document.cookie.split(";").forEach((cookie) => {
       const eqPos = cookie.indexOf("=");
-      const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+      const name = eqPos > -1 ? cookie.slice(0, eqPos).trim() : cookie.trim();
       if (name.startsWith('_ga') || name.startsWith('_gid') || name.startsWith('_gat')) {
         document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
       }
@@ -61,7 +61,7 @@ export const clearNonEssentialCookies = (): void => {
     // Clear marketing cookies (Facebook Pixel, etc.)
     document.cookie.split(";").forEach((cookie) => {
       const eqPos = cookie.indexOf("=");
-      const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+      const name = eqPos > -1 ? cookie.slice(0, eqPos).trim() : cookie.trim();
       if (name.startsWith('_fb') || name.startsWith('fr')) {
         document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
       }
@@ -74,5 +74,28 @@ export const initializeCookieConsent = (): void => {
   const consent = getCookieConsent();
   if (consent && hasValidConsent()) {
     clearNonEssentialCookies();
+    applyConsent(consent);
   }
+};
+
+// Atualiza o consentimento das tags (Google Consent Mode v2 e Meta Pixel).
+// O estado inicial (negado/concedido) é definido no <head> do index.html,
+// antes de qualquer tag carregar.
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+    fbq?: (...args: unknown[]) => void;
+  }
+}
+
+export const applyConsent = (consent: Pick<CookieConsent, 'analytics' | 'marketing'>): void => {
+  const analytics = consent.analytics ? 'granted' : 'denied';
+  const marketing = consent.marketing ? 'granted' : 'denied';
+  window.gtag?.('consent', 'update', {
+    analytics_storage: analytics,
+    ad_storage: marketing,
+    ad_user_data: marketing,
+    ad_personalization: marketing,
+  });
+  window.fbq?.('consent', consent.marketing ? 'grant' : 'revoke');
 };

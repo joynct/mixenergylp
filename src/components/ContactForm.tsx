@@ -1,5 +1,6 @@
-import React, { useState, FormEvent } from 'react';
+import { useState, useRef, FormEvent, ChangeEvent } from 'react';
 import { Send, Calculator } from 'lucide-react';
+import { buildWhatsAppUrl } from '../config';
 
 // Interfaces para os tipos de dados
 interface EstadoData {
@@ -91,12 +92,19 @@ const ContactForm = () => {
   
   // Estados para os resultados da calculadora
   const [potencia, setPotencia] = useState('');
-  const [investimento, setInvestimento] = useState('');
+  // Mantidos para reativar os cards de investimento/retorno (hoje ocultos)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_investimento, setInvestimento] = useState('');
   const [economia, setEconomia] = useState('');
-  const [payback, setPayback] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_payback, setPayback] = useState('');
   const [showResults, setShowResults] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [consent, setConsent] = useState(false);
+  // Assinatura dos últimos dados enviados com sucesso (evita lead duplicado)
+  const lastSentRef = useRef<string | null>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
     if (name === 'phone') {
@@ -118,85 +126,97 @@ const ContactForm = () => {
     if (!formData.phone.trim() || formData.phone.replace(/\D/g, '').length < 10) newErrors.phone = 'Telefone inválido';
     if (!formData.city.trim()) newErrors.city = 'Cidade é obrigatória';
     if (!formData.state.trim()) newErrors.state = 'Estado é obrigatório';
-    if (!formData.billValue.trim()) newErrors.billValue = 'Valor da conta é obrigatório';
+    if (!(parseFloat(formData.billValue) > 0)) newErrors.billValue = 'Valor da conta é obrigatório';
     if (!formData.installationType.trim()) newErrors.installationType = 'Tipo de instalação é obrigatório';
+    if (!consent) newErrors.consent = 'É necessário aceitar para continuar';
     if (formData.verification !== '2') newErrors.verification = 'Resposta incorreta';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
   
-const handleFormSubmission = (e: FormEvent) => {
-  e.preventDefault();
+  const handleFormSubmission = (e: FormEvent) => {
+    e.preventDefault();
+    if (submitting || !validateForm()) return;
 
-  if (validateForm()) {
-    // 1. Envia os dados para o Netlify usando o URL raiz
+    // 1. Envia os dados para o Netlify (que encaminha o lead por e-mail),
+    //    exceto se forem idênticos ao último envio (ex.: cliquei em calcular de novo)
     const myForm = e.target as HTMLFormElement;
-    const formData = new FormData(myForm);
+    const data = new FormData(myForm);
+    const signature = new URLSearchParams(data as unknown as Record<string, string>).toString();
 
-    // Adiciona o nome do formulário ao FormData para garantir a submissão
-    formData.append("form-name", "contact");
-      
-    fetch("/", {
-      method: "POST",
-      body: new URLSearchParams(formData as any).toString(),
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    })
-    .then(response => {
-      if (!response.ok) {
-        console.error("Erro no envio para o Netlify:", response.status, response.statusText);
-      } else {
-        console.log("Formulario enviado para o Netlify com sucesso!");
-      }
-    })
-    .catch(error => {
-      console.error("Erro na requisição:", error);
-    });
-  
-      // 2. Coleta os valores para o cálculo
-      const valorConta = parseFloat(formData.get('billValue') as string);
-      const estado = formData.get('state') as string;
-      const tipoInstalacao = formData.get('installationType') as string;
-  
-      // 3. Executa os cálculos (mesma lógica de antes)
-      const dados = dadosEstados[estado];
-      const tarifa = dados[tipoInstalacao as keyof EstadoData];
-      const irradiacao = dados.irradiacao;
-      const custo = custoPorWp[tipoInstalacao];
-      const taxa = taxaDisponibilidade[tipoInstalacao];
-  
-      const consumoMensal = valorConta / tarifa;
-      const consumoCompensavel = consumoMensal - (taxa / tarifa);
-      const potenciaNecessaria = consumoCompensavel / (irradiacao * 30 * fatorPerformance);
-      const investimentoTotal = potenciaNecessaria * 1000 * custo;
-      const economiaMensal = consumoCompensavel * tarifa;
-      const paybackAnos = investimentoTotal / (economiaMensal * 12);
-  
-      setPotencia(formatNumber(potenciaNecessaria) + ' kWp');
-      setInvestimento(formatCurrency(investimentoTotal));
-      setEconomia(formatCurrency(economiaMensal));
-      setPayback(formatNumber(paybackAnos) + ' anos');
-      setShowResults(true);
+    if (signature !== lastSentRef.current) {
+      setSubmitting(true);
+      data.append('form-name', 'contact');
+
+      fetch('/', {
+        method: 'POST',
+        body: new URLSearchParams(data as unknown as Record<string, string>).toString(),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      })
+        .then((response) => {
+          if (response.ok) {
+            lastSentRef.current = signature;
+          } else {
+            console.error('Erro no envio para o Netlify:', response.status, response.statusText);
+          }
+        })
+        .catch((error) => {
+          console.error('Erro na requisição:', error);
+        })
+        .finally(() => setSubmitting(false));
     }
+
+    // 2. Coleta os valores para o cálculo
+    const valorConta = parseFloat(data.get('billValue') as string);
+    const estado = data.get('state') as string;
+    const tipoInstalacao = data.get('installationType') as string;
+
+    // 3. Executa os cálculos
+    const dados = dadosEstados[estado];
+    const tarifa = dados[tipoInstalacao as keyof EstadoData];
+    const irradiacao = dados.irradiacao;
+    const custo = custoPorWp[tipoInstalacao];
+    const taxa = taxaDisponibilidade[tipoInstalacao];
+
+    const consumoMensal = valorConta / tarifa;
+    // Nunca negativo: contas abaixo da taxa mínima não geram economia
+    const consumoCompensavel = Math.max(0, consumoMensal - taxa / tarifa);
+    const potenciaNecessaria = consumoCompensavel / (irradiacao * 30 * fatorPerformance);
+    const investimentoTotal = potenciaNecessaria * 1000 * custo;
+    const economiaMensal = consumoCompensavel * tarifa;
+    const paybackAnos = economiaMensal > 0 ? investimentoTotal / (economiaMensal * 12) : 0;
+
+    setPotencia(formatNumber(potenciaNecessaria) + ' kWp');
+    setInvestimento(formatCurrency(investimentoTotal));
+    setEconomia(formatCurrency(economiaMensal));
+    setPayback(formatNumber(paybackAnos) + ' anos');
+    setShowResults(true);
   };
 
-const handleSendToWhatsapp = () => {
-  const message = `Olá! Meu nome é ${formData.name} e gostaria de fazer uma simulação gratuita de energia solar!
+  const handleSendToWhatsapp = () => {
+    const tipo =
+      formData.installationType === 'residencial'
+        ? 'Residencial'
+        : formData.installationType === 'comercial'
+        ? 'Comercial'
+        : 'Industrial';
+
+    const message = `Olá! Meu nome é ${formData.name} e gostaria de fazer uma simulação gratuita de energia solar!
 
 Segue meus dados:
 - Telefone: ${formData.phone}
 - Cidade: ${formData.city}
 - Estado: ${formData.state}
-- Tipo de Instalação: ${formData.installationType === 'residencial' ? 'Residencial' : formData.installationType === 'comercial' ? 'Comercial' : 'Industrial'}
-
+- Tipo de Instalação: ${tipo}
+- Valor médio da conta de luz: ${formatCurrency(parseFloat(formData.billValue))}
 
 Resultados da simulação:
 - Potência Necessária: ${potencia}
 - Economia Mensal Estimada: ${economia}`;
 
-  const whatsappUrl = `https://api.whatsapp.com/send/?phone=5564992170512&text=Ol%C3%A1%2C+tudo+bem%3F+Vim+pelo+site+da+Mix+Energy+e+gostaria+de+fazer+um+or%C3%A7amento.&type=phone_number&app_absent=0`;
-  window.open(whatsappUrl, '_blank');
-};
+    window.open(buildWhatsAppUrl(message), '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <section id="contact-form" className="py-16 bg-gradient-to-br from-blue-950 to-blue-900 text-white">       
@@ -217,9 +237,16 @@ Resultados da simulação:
             name="contact" 
             method="POST"
             data-netlify="true"
+            data-netlify-honeypot="bot-field"
             onSubmit={handleFormSubmission}
             className="bg-white rounded-lg p-8 text-gray-900"
           >
+            <p className="hidden" aria-hidden="true">
+              <label>
+                Não preencha este campo: <input name="bot-field" tabIndex={-1} autoComplete="off" />
+              </label>
+            </p>
+
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -228,6 +255,8 @@ Resultados da simulação:
                 <input
                   type="text"
                   id="name"
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? 'name-error' : undefined}
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
@@ -236,7 +265,7 @@ Resultados da simulação:
                   }`}
                   placeholder="Seu nome completo"
                 />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                {errors.name && <p id="name-error" role="alert" className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
               
               <div>
@@ -246,6 +275,8 @@ Resultados da simulação:
                 <input
                   type="text"
                   id="phone"
+                  aria-invalid={!!errors.phone}
+                  aria-describedby={errors.phone ? 'phone-error' : undefined}
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
@@ -255,7 +286,7 @@ Resultados da simulação:
                   placeholder="(00) 00000-0000"
                   maxLength={15}
                 />
-                {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+                {errors.phone && <p id="phone-error" role="alert" className="text-red-500 text-sm mt-1">{errors.phone}</p>}
               </div>
               
               <div>
@@ -265,6 +296,8 @@ Resultados da simulação:
                 <input
                   type="text"
                   id="city"
+                  aria-invalid={!!errors.city}
+                  aria-describedby={errors.city ? 'city-error' : undefined}
                   name="city"
                   value={formData.city}
                   onChange={handleInputChange}
@@ -273,7 +306,7 @@ Resultados da simulação:
                   }`}
                   placeholder="Sua cidade"
                 />
-                {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
+                {errors.city && <p id="city-error" role="alert" className="text-red-500 text-sm mt-1">{errors.city}</p>}
               </div>
 
               <div>
@@ -282,6 +315,8 @@ Resultados da simulação:
                 </label>
                 <select
                   id="state"
+                  aria-invalid={!!errors.state}
+                  aria-describedby={errors.state ? 'state-error' : undefined}
                   name="state"
                   value={formData.state}
                   onChange={handleInputChange}
@@ -294,7 +329,7 @@ Resultados da simulação:
                     <option key={uf} value={uf}>{uf}</option>
                   ))}
                 </select>
-                {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state}</p>}
+                {errors.state && <p id="state-error" role="alert" className="text-red-500 text-sm mt-1">{errors.state}</p>}
               </div>
               
               <div>
@@ -304,6 +339,8 @@ Resultados da simulação:
                 <input
                   type="number"
                   id="billValue"
+                  aria-invalid={!!errors.billValue}
+                  aria-describedby={errors.billValue ? 'billValue-error' : undefined}
                   name="billValue"
                   value={formData.billValue}
                   onChange={handleInputChange}
@@ -312,7 +349,7 @@ Resultados da simulação:
                   }`}
                   placeholder="Ex: 450"
                 />
-                {errors.billValue && <p className="text-red-500 text-sm mt-1">{errors.billValue}</p>}
+                {errors.billValue && <p id="billValue-error" role="alert" className="text-red-500 text-sm mt-1">{errors.billValue}</p>}
               </div>
               
               <div>
@@ -321,6 +358,8 @@ Resultados da simulação:
                 </label>
                 <select
                   id="installationType"
+                  aria-invalid={!!errors.installationType}
+                  aria-describedby={errors.installationType ? 'installationType-error' : undefined}
                   name="installationType"
                   value={formData.installationType}
                   onChange={handleInputChange}
@@ -333,7 +372,7 @@ Resultados da simulação:
                   <option value="comercial">Comercial</option>
                   <option value="industrial">Industrial</option>
                 </select>
-                {errors.installationType && <p className="text-red-500 text-sm mt-1">{errors.installationType}</p>}
+                {errors.installationType && <p id="installationType-error" role="alert" className="text-red-500 text-sm mt-1">{errors.installationType}</p>}
               </div>
             </div>
             
@@ -344,6 +383,8 @@ Resultados da simulação:
               <input
                 type="text"
                 id="verification"
+                  aria-invalid={!!errors.verification}
+                  aria-describedby={errors.verification ? 'verification-error' : undefined}
                 name="verification"
                 value={formData.verification}
                 onChange={handleInputChange}
@@ -352,12 +393,47 @@ Resultados da simulação:
                 }`}
                 placeholder="?"
               />
-              {errors.verification && <p className="text-red-500 text-sm mt-1">{errors.verification}</p>}
+              {errors.verification && <p id="verification-error" role="alert" className="text-red-500 text-sm mt-1">{errors.verification}</p>}
             </div>
             
+            <div className="mt-6">
+              <label htmlFor="consent" className="flex items-start gap-3 text-sm text-gray-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="consent"
+                  name="consent"
+                  value="Sim"
+                  checked={consent}
+                  onChange={(e) => {
+                    setConsent(e.target.checked);
+                    if (errors.consent) setErrors((prev) => ({ ...prev, consent: '' }));
+                  }}
+                  aria-invalid={!!errors.consent}
+                  aria-describedby={errors.consent ? 'consent-error' : undefined}
+                  className="mt-1 h-4 w-4 flex-shrink-0"
+                />
+                <span>
+                  Li e concordo com a{' '}
+                  <a
+                    href="/politica-privacidade"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline hover:text-blue-800"
+                  >
+                    Política de Privacidade
+                  </a>{' '}
+                  e autorizo a Mix Energy a entrar em contato pelo telefone/WhatsApp informado.
+                </span>
+              </label>
+              {errors.consent && (
+                <p id="consent-error" role="alert" className="text-red-500 text-sm mt-1">{errors.consent}</p>
+              )}
+            </div>
+
             <button
               type="submit"
-              className="w-full mt-8 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold py-4 px-8 rounded-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
+              disabled={submitting}
+              className="disabled:opacity-70 disabled:cursor-not-allowed w-full mt-8 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold py-4 px-8 rounded-lg transition-all transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
             >
               <Calculator className="h-5 w-5" />
               <span>CALCULAR ECONOMIA</span>

@@ -1,29 +1,57 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Shield, Users, Zap } from 'lucide-react';
 
 const AboutSection = () => {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
-  useEffect(() => {
-    const heading = headingRef.current;
-    if (heading) {
-      // Remove cursor after animation completes
-      const timer = setTimeout(() => {
-        heading.classList.add('animation-complete');
-      }, 3500); // 0.5s delay + 3s animation
+  const sectionRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
 
-      return () => clearTimeout(timer);
+  // Dispara as animações só quando a seção entra na tela
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    if (!('IntersectionObserver' in window)) {
+      setInView(true);
+      return;
     }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '0px 0px -40% 0px' }
+    );
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!inView) return;
+    // Remove o cursor depois que a digitação termina (0.5s de atraso + 3s de animação)
+    const timer = setTimeout(() => {
+      headingRef.current?.classList.add('animation-complete');
+    }, 3500);
+    return () => clearTimeout(timer);
+  }, [inView]);
+
   return (
-    <section id="about" className="py-16 bg-white">
+    <section
+      id="about"
+      ref={sectionRef}
+      className={`py-16 bg-white scroll-mt-24 reveal-on-scroll${inView ? ' in-view' : ''}`}
+    >
       <div className="container mx-auto px-4">
         {/* Centered Logo */}
         <div className="flex justify-center mb-8">
           <img 
             src="/mix energy logo preto.png" 
             alt="Mix Energy Solar - Logo" 
+            width={547}
+            height={261}
+            
             className="w-full max-w-lg mx-auto"
           />
         </div>
@@ -42,9 +70,9 @@ const AboutSection = () => {
           </h2>
           <p className="text-xl mb-4 text-gray-800 fade-in-text fade-in-delay-1">
           </p>
-          <p className="text-lg text-gray-700 fade-in-text fade-in-delay-2">
+          <div className="text-lg text-gray-700 fade-in-text fade-in-delay-2">
             Com equipe própria e especializada, garantimos instalação em tempo recorde,<p> atendimento humanizado e um pós-venda que realmente funciona. </p> <p> Atendemos em todo o Brasil. </p>
-          </p>
+          </div>
         </div>
         
         {/* Features Grid */}

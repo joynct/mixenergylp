@@ -85,9 +85,10 @@
   margin: 0 auto;
   width: 0;
   animation: 
-    typewriter 3s steps(28, end) forwards,
+    typewriter 3s steps(37, end) forwards,
     blink-caret 0.75s step-end infinite;
   animation-delay: 0.5s;
+  animation-play-state: paused;
 }
 
 /* Animation to hide cursor after typewriter completes */
@@ -111,6 +112,7 @@
 .fade-in-text {
   opacity: 0;
   animation: fade-in 1s ease-out forwards;
+  animation-play-state: paused;
 }
 
 .fade-in-delay-1 {
@@ -121,13 +123,44 @@
   animation-delay: 4.5s; /* Slightly after first fade-in */
 }
 
-/* Responsive typewriter for mobile */
-@media (max-width: 768px) {
+/* Animações da seção "Sobre" só rodam quando ela aparece na tela */
+.reveal-on-scroll.in-view .typewriter-text-white,
+.reveal-on-scroll.in-view .fade-in-text {
+  animation-play-state: running;
+}
+
+/* Em telas menores que 1024px o título quebra linha (evita corte do texto) */
+@media (max-width: 1023px) {
   .typewriter-text-white {
     white-space: normal;
     border-right: none;
     animation: fade-in 1s ease-out forwards;
     animation-delay: 0.5s;
+    animation-play-state: paused;
     width: auto;
+  }
+}
+
+/* Respeita a preferência do sistema por menos movimento (mantém o estado final visível) */
+@media (prefers-reduced-motion: reduce) {
+  .animate-print-up,
+  .animate-impact-reveal,
+  .fade-in-text,
+  .typewriter-text-white {
+    animation: none !important;
+  }
+  .animate-print-up {
+    clip-path: none;
+  }
+  .animate-impact-reveal,
+  .fade-in-text {
+    opacity: 1;
+  }
+  .typewriter-text-white {
+    width: auto;
+    border-right: none;
+  }
+  .animate-bounce {
+    animation: none;
   }
 }

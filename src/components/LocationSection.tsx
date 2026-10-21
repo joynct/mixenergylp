@@ -1,9 +1,8 @@
-import React from 'react';
 import { MapPin, Clock, Phone } from 'lucide-react';
 
 const LocationSection = () => {
   return (
-    <section id="location" className="min-h-screen py-16" style={{ backgroundColor: 'rgb(23, 37, 84)' }}>
+    <section id="location" className="min-h-screen py-16 scroll-mt-24" style={{ backgroundColor: 'rgb(23, 37, 84)' }}>
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">

@@ -1,5 +1,4 @@
-import React from 'react';
-import { FileText, Mail, Phone, MapPin, Calendar, Shield, Users, AlertTriangle, CheckCircle, ArrowLeft } from 'lucide-react';
+import { FileText, Mail, Phone, MapPin, Users, AlertTriangle, CheckCircle, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const TermsOfService = () => {
@@ -23,7 +22,8 @@ const TermsOfService = () => {
             Termos de Uso
           </h1>
           <p className="text-lg text-gray-600">
-            Mix Energy Solar - Última atualização: Janeiro de 2025
+            Mix Energy LTDA (Mix Energy Solar) - CNPJ 54.882.666/0001-40<br />
+            Última atualização: Outubro de 2026
           </p>
         </div>
 
@@ -53,7 +53,7 @@ const TermsOfService = () => {
             </h2>
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 mb-4">
               <p className="text-gray-700 mb-3">
-                A Mix Energy Solar é uma empresa especializada em soluções de energia solar fotovoltaica, 
+                A Mix Energy Solar, nome fantasia de Mix Energy LTDA, inscrita no CNPJ sob o nº 54.882.666/0001-40, é uma empresa especializada em soluções de energia solar fotovoltaica, 
                 com sede na Av. Pedro Ludovico Teixeira, 16 - lt07/08 - parte c, Rio Verde - GO, CEP 75906-270.
               </p>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
@@ -70,8 +70,8 @@ const TermsOfService = () => {
                 <div>
                   <h4 className="font-semibold text-blue-950 mb-2">Área de Atuação</h4>
                   <ul className="list-disc list-inside space-y-1 text-gray-600">
-                    <li>Todo o estado de Goiás</li>
-                    <li>Atendimento nacional para grandes projetos</li>
+                    <li>Atendimento em todo o Brasil</li>
+                    <li>Sede em Rio Verde - GO</li>
                     <li>Foco em Rio Verde e região</li>
                     <li>Parcerias em outros estados</li>
                   </ul>

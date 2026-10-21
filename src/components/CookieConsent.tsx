@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Cookie, X, ExternalLink } from 'lucide-react';
+import { applyConsent } from '../utils/cookieUtils';
 
 const CookieConsent = () => {
   const [showBanner, setShowBanner] = useState(false);
@@ -12,41 +14,22 @@ const CookieConsent = () => {
     }
   }, []);
 
-  const handleAcceptAll = () => {
+  const saveConsent = (analytics: boolean, marketing: boolean) => {
     const consentData = {
       necessary: true,
-      analytics: true,
-      marketing: true,
+      analytics,
+      marketing,
       timestamp: new Date().toISOString(),
       version: '1.0'
     };
     localStorage.setItem('cookie-consent', JSON.stringify(consentData));
+    applyConsent(consentData);
     setShowBanner(false);
   };
 
-  const handleAcceptNecessary = () => {
-    const consentData = {
-      necessary: true,
-      analytics: false,
-      marketing: false,
-      timestamp: new Date().toISOString(),
-      version: '1.0'
-    };
-    localStorage.setItem('cookie-consent', JSON.stringify(consentData));
-    setShowBanner(false);
-  };
-
-  const handleRejectAll = () => {
-    const consentData = {
-      necessary: true,
-      analytics: false,
-      marketing: false,
-      timestamp: new Date().toISOString(),
-      version: '1.0'
-    };
-    localStorage.setItem('cookie-consent', JSON.stringify(consentData));
-    setShowBanner(false);
-  };
+  const handleAcceptAll = () => saveConsent(true, true);
+  const handleAcceptNecessary = () => saveConsent(false, false);
+  const handleRejectAll = () => saveConsent(false, false);
 
   if (!showBanner) return null;
 
@@ -108,17 +91,18 @@ const CookieConsent = () => {
               >
                 <span>{showDetails ? 'Menos' : 'Mais'} Detalhes</span>
               </button>
-              <a
-                href="/privacy-policy"
+              <Link
+                to="/politica-privacidade"
                 className="text-blue-600 hover:text-blue-800 px-4 py-2 font-medium transition-colors flex items-center space-x-1"
               >
                 <span>Política de Privacidade</span>
                 <ExternalLink className="h-3 w-3" />
-              </a>
+              </Link>
             </div>
           </div>
           <button
-            onClick={() => setShowBanner(false)}
+            onClick={handleRejectAll}
+            aria-label="Fechar e recusar cookies opcionais"
             className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
           >
             <X className="h-5 w-5" />

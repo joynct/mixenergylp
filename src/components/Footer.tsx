@@ -1,6 +1,6 @@
-import React from 'react';
 import { MessageCircle, Instagram, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { WHATSAPP_PHONE } from '../config';
 
 const Footer = () => {
   const handlePrivacyPolicyClick = () => {
@@ -17,6 +17,8 @@ const Footer = () => {
               <img 
                 src="/mix energy logo branco.png" 
                 alt="Mix Energy Solar" 
+                width={547}
+                height={261}
                 className="h-[88px] w-auto"
               />
             </div>
@@ -24,17 +26,34 @@ const Footer = () => {
               Deixe o sol gerar sua energia! 
             </p>
             <p className="text-sm text-blue-300">
-              © 2025 Mix Energy Solar. Todos os direitos reservados.
+              © {new Date().getFullYear()} Mix Energy Solar. Todos os direitos reservados.
+            </p>
+            <p className="text-sm text-blue-300 mt-1">
+              Mix Energy LTDA - CNPJ: 54.882.666/0001-40
             </p>
             
             {/* Privacy Policy link moved below copyright */}
-            <div className="mt-4">
+            <div className="mt-4 flex flex-col space-y-1">
               <Link
                 to="/politica-privacidade"
                 onClick={handlePrivacyPolicyClick}
                 className="text-blue-300 hover:text-white transition-colors text-sm"
               >
                 Política de Privacidade
+              </Link>
+              <Link
+                to="/termos-uso"
+                onClick={handlePrivacyPolicyClick}
+                className="text-blue-300 hover:text-white transition-colors text-sm"
+              >
+                Termos de Uso
+              </Link>
+              <Link
+                to="/politica-cookies"
+                onClick={handlePrivacyPolicyClick}
+                className="text-blue-300 hover:text-white transition-colors text-sm"
+              >
+                Política de Cookies
               </Link>
             </div>
           </div>
@@ -43,7 +62,7 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4">Contato</h3>
             <div className="space-y-3">
               <a
-                href="https://wa.me/5564992170512"
+                href={`https://wa.me/${WHATSAPP_PHONE}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center space-x-2 text-blue-200 hover:text-white transition-colors"
