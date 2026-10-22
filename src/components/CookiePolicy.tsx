@@ -541,8 +541,8 @@ const CookiePolicy = () => {
                   <div>
                     <p className="font-semibold text-blue-950">Endereço</p>
                     <p className="text-sm text-gray-600">
-                      Av. Pedro Ludovico Teixeira, 16<br />
-                      Rio Verde - GO, 75906-270
+                      Rua Rui Barbosa, 874 - Sala 1<br />
+                      Centro, Rio Verde - GO, 75906-270
                     </p>
                   </div>
                 </div>

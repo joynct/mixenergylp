@@ -85,8 +85,7 @@ const ContactForm = () => {
     city: '',
     state: '',
     billValue: '',
-    installationType: '',
-    verification: ''
+    installationType: ''
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   
@@ -103,6 +102,8 @@ const ContactForm = () => {
   const [consent, setConsent] = useState(false);
   // Assinatura dos últimos dados enviados com sucesso (evita lead duplicado)
   const lastSentRef = useRef<string | null>(null);
+  // Robôs enviam o formulário na hora; pessoas levam alguns segundos
+  const loadedAtRef = useRef(Date.now());
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -129,7 +130,6 @@ const ContactForm = () => {
     if (!(parseFloat(formData.billValue) > 0)) newErrors.billValue = 'Valor da conta é obrigatório';
     if (!formData.installationType.trim()) newErrors.installationType = 'Tipo de instalação é obrigatório';
     if (!consent) newErrors.consent = 'É necessário aceitar para continuar';
-    if (formData.verification !== '2') newErrors.verification = 'Resposta incorreta';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -145,7 +145,9 @@ const ContactForm = () => {
     const data = new FormData(myForm);
     const signature = new URLSearchParams(data as unknown as Record<string, string>).toString();
 
-    if (signature !== lastSentRef.current) {
+    const tooFast = Date.now() - loadedAtRef.current < 2000;
+
+    if (!tooFast && signature !== lastSentRef.current) {
       setSubmitting(true);
       data.append('form-name', 'contact');
 
@@ -374,26 +376,6 @@ Resultados da simulação:
                 </select>
                 {errors.installationType && <p id="installationType-error" role="alert" className="text-red-500 text-sm mt-1">{errors.installationType}</p>}
               </div>
-            </div>
-            
-            <div className="mt-6">
-              <label htmlFor="verification" className="block text-sm font-medium text-gray-700 mb-2">
-                1 + 1=?*
-              </label>
-              <input
-                type="text"
-                id="verification"
-                  aria-invalid={!!errors.verification}
-                  aria-describedby={errors.verification ? 'verification-error' : undefined}
-                name="verification"
-                value={formData.verification}
-                onChange={handleInputChange}
-                className={`w-32 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.verification ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder="?"
-              />
-              {errors.verification && <p id="verification-error" role="alert" className="text-red-500 text-sm mt-1">{errors.verification}</p>}
             </div>
             
             <div className="mt-6">

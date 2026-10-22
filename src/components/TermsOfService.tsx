@@ -54,7 +54,7 @@ const TermsOfService = () => {
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 mb-4">
               <p className="text-gray-700 mb-3">
                 A Mix Energy Solar, nome fantasia de Mix Energy LTDA, inscrita no CNPJ sob o nº 54.882.666/0001-40, é uma empresa especializada em soluções de energia solar fotovoltaica, 
-                com sede na Av. Pedro Ludovico Teixeira, 16 - lt07/08 - parte c, Rio Verde - GO, CEP 75906-270.
+                com sede na Rua Rui Barbosa, 874 - Sala 1 - Centro, Rio Verde - GO, CEP 75906-270.
               </p>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
                 <div>
@@ -368,8 +368,8 @@ const TermsOfService = () => {
                   <div>
                     <p className="font-semibold text-blue-950">Endereço</p>
                     <p className="text-sm text-gray-600">
-                      Av. Pedro Ludovico Teixeira, 16<br />
-                      Rio Verde - GO, 75906-270
+                      Rua Rui Barbosa, 874 - Sala 1<br />
+                      Centro, Rio Verde - GO, 75906-270
                     </p>
                   </div>
                 </div>

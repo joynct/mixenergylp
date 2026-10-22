@@ -36,7 +36,7 @@ const HeroSection = () => {
           </div>
           <div className="relative">
             <div className="flex items-center justify-center">
-              <div className="relative w-full max-w-md mx-auto overflow-hidden rounded-lg shadow-2xl">
+              <div className="relative w-full max-w-md mx-auto overflow-hidden rounded-lg shadow-2xl animate-bill-shake">
                 <picture>
                   <source media="(min-width: 768px)" srcSet="/conta-de-energia.webp" width={600} height={1264} />
                   <img
@@ -55,7 +55,7 @@ const HeroSection = () => {
                     alt="R$ 300" 
                     width={424}
                     height={197}
-                    className="w-[25.6rem] h-auto drop-shadow-2xl"
+                    className="w-[25.6rem] h-auto drop-shadow-2xl animate-tag-pulse"
                   />
                 </div>
               </div>
