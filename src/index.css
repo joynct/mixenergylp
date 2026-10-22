@@ -2,59 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@keyframes print-up {
-  0% {
-    clip-path: inset(100% 0 0 0);
-    transform: translateY(20px);
-  }
-  100% {
-    clip-path: inset(0 0 0 0);
-    transform: translateY(0);
-  }
-}
-
-@keyframes impact-reveal {
-  0% {
-    opacity: 0;
-    transform: translateX(-50%) scale(0.3) rotate(-15deg);
-    filter: blur(10px);
-  }
-  50% {
-    opacity: 1;
-    transform: translateX(-50%) scale(1.2) rotate(5deg);
-    filter: blur(0px);
-  }
-  70% {
-    transform: translateX(-50%) scale(0.95) rotate(-2deg);
-  }
-  85% {
-    transform: translateX(-50%) scale(1.05) rotate(1deg);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(-50%) scale(1) rotate(0deg);
-    filter: blur(0px);
-  }
-}
-
-@keyframes typewriter {
-  0% {
-    width: 0;
-  }
-  100% {
-    width: 100%;
-  }
-}
-
-@keyframes blink-caret {
-  0%, 50% {
-    border-color: transparent;
-  }
-  51%, 100% {
-    border-color: #f97316; /* Orange color for visibility */
-  }
-}
-
 @keyframes fade-in {
   0% {
     opacity: 0;
@@ -66,78 +13,187 @@
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* Hero: a conta de luz é "impressa" linha a linha e recebe o carimbo  */
+/* ------------------------------------------------------------------ */
+@keyframes print-reveal {
+  from { clip-path: inset(0 0 100% 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes print-slide {
+  from { transform: translateY(-32px); }
+  to   { transform: translateY(0); }
+}
+
+/* leve tremida lateral, como a cabeça de uma impressora */
+@keyframes print-jitter {
+  0%, 100% { translate: 0 0; }
+  20% { translate: -1.5px 0; }
+  40% { translate: 1.5px 0; }
+  60% { translate: -1px 0; }
+  80% { translate: 1px 0; }
+}
+
 .animate-print-up {
-  animation: print-up 2s ease-out forwards;
-  animation-delay: 0.5s;
-  clip-path: inset(100% 0 0 0);
+  clip-path: inset(0 0 100% 0);
+  animation:
+    print-reveal 1.6s steps(32, end) 0.2s forwards,
+    print-slide 1.6s ease-out 0.2s forwards,
+    print-jitter 0.12s linear 0.2s 13;
 }
 
-.animate-impact-reveal {
-  animation: impact-reveal 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  animation-delay: 2.8s; /* Starts after the print-up animation completes */
-  opacity: 0;
-}
-
-.typewriter-text-white {
-  overflow: hidden;
-  border-right: 3px solid #f97316; /* Orange border */
-  white-space: nowrap;
-  margin: 0 auto;
-  width: 0;
-  animation: 
-    typewriter 3s steps(37, end) forwards,
-    blink-caret 0.75s step-end infinite;
-  animation-delay: 0.5s;
-  animation-play-state: paused;
-}
-
-/* Animation to hide cursor after typewriter completes */
-.typewriter-text-white::after {
-  content: '';
-  animation: fade-out-cursor 0.1s ease-out forwards;
-  animation-delay: 3.5s; /* Hide cursor after typewriter completes */
-}
-
-@keyframes fade-out-cursor {
-  to {
-    border-color: transparent;
+/* o "R$ 300" cai como um carimbo, quando a impressão termina */
+@keyframes impact-reveal {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(2.8) rotate(-16deg);
+    filter: blur(8px);
+  }
+  55% {
+    opacity: 1;
+    transform: translateX(-50%) scale(0.9) rotate(4deg);
+    filter: blur(0);
+  }
+  72% {
+    transform: translateX(-50%) scale(1.07) rotate(-2deg);
+  }
+  88% {
+    transform: translateX(-50%) scale(0.98) rotate(1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1) rotate(0deg);
+    filter: blur(0);
   }
 }
 
-/* Remove cursor after animation completes */
-.typewriter-text-white.animation-complete {
-  border-right: none;
+.animate-impact-reveal {
+  opacity: 0;
+  animation: impact-reveal 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.2) 1.8s forwards;
 }
 
+/* a conta treme no momento do impacto do carimbo */
+@keyframes bill-shake {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(-5px, 3px); }
+  30% { transform: translate(4px, -3px); }
+  45% { transform: translate(-3px, 2px); }
+  60% { transform: translate(2px, -1px); }
+  80% { transform: translate(-1px, 1px); }
+}
+
+.animate-bill-shake {
+  animation: bill-shake 0.45s ease-out 2.3s;
+}
+
+/* depois, o carimbo "respira" de leve para chamar atenção */
+@keyframes tag-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.045); }
+}
+
+.animate-tag-pulse {
+  animation: tag-pulse 2.6s ease-in-out 3.4s infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/* Seção "Sobre": título digitado (começa quando a seção aparece)      */
+/* ------------------------------------------------------------------ */
 .fade-in-text {
   opacity: 0;
-  animation: fade-in 1s ease-out forwards;
+  animation: fade-in 0.8s ease-out forwards;
   animation-play-state: paused;
 }
 
-.fade-in-delay-1 {
-  animation-delay: 4s; /* After typewriter completes */
-}
-
+.fade-in-delay-1,
 .fade-in-delay-2 {
-  animation-delay: 4.5s; /* Slightly after first fade-in */
+  animation-delay: 1.6s; /* entra enquanto as últimas letras são digitadas */
 }
 
-/* Animações da seção "Sobre" só rodam quando ela aparece na tela */
-.reveal-on-scroll.in-view .typewriter-text-white,
+/* o espaço do título é reservado pelo texto invisível, então nada se mexe */
+.tw-wrap {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.tw-size {
+  visibility: hidden;
+}
+
+.tw-size::before {
+  content: attr(data-text);
+}
+
+.tw-text {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 100% 0 0);
+  animation: tw-reveal 2.2s steps(37, end) 0.2s forwards;
+  animation-play-state: paused;
+}
+
+@keyframes tw-reveal {
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* cursor: acompanha a última letra digitada e some quando termina */
+.tw-caret {
+  position: absolute;
+  top: 8%;
+  bottom: 8%;
+  left: 0;
+  width: 3px;
+  background: #f97316;
+  animation:
+    tw-caret-move 2.2s steps(37, end) 0.2s forwards,
+    tw-caret-blink 0.6s step-end infinite,
+    tw-caret-hide 0.01s linear 2.4s forwards;
+  animation-play-state: paused;
+}
+
+@keyframes tw-caret-move {
+  from { left: 0; }
+  to { left: calc(100% - 3px); }
+}
+
+@keyframes tw-caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes tw-caret-hide {
+  to { opacity: 0; }
+}
+
+/* as animações só rodam quando a seção aparece na tela */
+.reveal-on-scroll.in-view .tw-text,
+.reveal-on-scroll.in-view .tw-caret,
 .reveal-on-scroll.in-view .fade-in-text {
   animation-play-state: running;
 }
 
-/* Em telas menores que 1024px o título quebra linha (evita corte do texto) */
+/* Abaixo de 1024px o título quebra em linhas e entra com fade (evita corte) */
 @media (max-width: 1023px) {
-  .typewriter-text-white {
+  .tw-wrap {
+    display: inline;
     white-space: normal;
-    border-right: none;
-    animation: fade-in 1s ease-out forwards;
-    animation-delay: 0.5s;
+  }
+  .tw-size,
+  .tw-caret {
+    display: none;
+  }
+  .tw-text {
+    position: static;
+    clip-path: none;
+    opacity: 0;
+    animation: fade-in 1s ease-out 0.2s forwards;
     animation-play-state: paused;
-    width: auto;
+  }
+  .fade-in-delay-1,
+  .fade-in-delay-2 {
+    animation-delay: 0.6s;
   }
 }
 
@@ -145,22 +201,25 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-print-up,
   .animate-impact-reveal,
+  .animate-bill-shake,
+  .animate-tag-pulse,
   .fade-in-text,
-  .typewriter-text-white {
+  .tw-text,
+  .animate-bounce {
     animation: none !important;
   }
   .animate-print-up {
     clip-path: none;
   }
   .animate-impact-reveal,
-  .fade-in-text {
+  .fade-in-text,
+  .tw-text {
     opacity: 1;
   }
-  .typewriter-text-white {
-    width: auto;
-    border-right: none;
+  .tw-text {
+    clip-path: none;
   }
-  .animate-bounce {
-    animation: none;
+  .tw-caret {
+    display: none;
   }
 }

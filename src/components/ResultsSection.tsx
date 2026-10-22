@@ -1,6 +1,17 @@
 import { useEffect, useState } from 'react';
 import { MapPin, Star, Quote, X } from 'lucide-react';
 import { GOOGLE_REVIEWS_URL, WHATSAPP_URL } from '../config';
+import { GOOGLE_REVIEWS } from '../data/reviews';
+
+// Cores dos avatares, em sequência (classes completas para o Tailwind reconhecer)
+const AVATAR_COLORS = [
+  'bg-blue-600',
+  'bg-green-600',
+  'bg-purple-600',
+  'bg-orange-600',
+  'bg-red-600',
+  'bg-teal-600',
+];
 
 const ResultsSection = () => {
   const [modalImage, setModalImage] = useState<string | null>(null);
@@ -161,144 +172,34 @@ const ResultsSection = () => {
           
           {/* Google Reviews Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {/* Review 1 */}
-            <div className="bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  B
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Bruna Ptaniskas</h4>
-                  <div className="flex items-center space-x-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
+            {GOOGLE_REVIEWS.map((review, index) => (
+              <div
+                key={index}
+                className={`bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow${index >= 5 ? ' hidden md:block' : ''}`}
+              >
+                <div className="flex items-center mb-4">
+                  <div
+                    className={`w-12 h-12 ${AVATAR_COLORS[index % AVATAR_COLORS.length]} rounded-full flex items-center justify-center text-white font-bold text-lg`}
+                  >
+                    {review.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="ml-3">
+                    <h4 className="font-semibold text-gray-900">{review.name}</h4>
+                    <div className="flex items-center space-x-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="relative">
-                <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
-                         Excelente experiência com a Mix Energy! A equipe foi super atenciosa e profissional. O sistema de energia solar instalado é de alta qualidade e já estou economizando na conta de luz.
-Funcionários educados , prazo de entrega rápido e serviço de qualidade . Recomendo muito!💡
-                </p>
-              </div>
-            </div>
-            
-            {/* Review 2 */}
-            <div className="bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  M
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Matheus Freitas</h4>
-                  <div className="flex items-center space-x-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
+                <div className="relative">
+                  <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
+                  <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
+                    {review.text}
+                  </p>
                 </div>
               </div>
-              <div className="relative">
-                <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
-                  Ótimo atendimento, entrega no prazo combinado, preço bem acessível 🔝
-                </p>
-              </div>
-            </div>
-            
-            {/* Review 3 */}
-            <div className="bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  T
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">talison rogerio</h4>
-                  <div className="flex items-center space-x-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="relative">
-                <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
-                  Serviço de procedência! Recomendo Mix Energy solar..
-                </p>
-              </div>
-            </div>
-            
-            {/* Review 4 */}
-            <div className="bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  M
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Maria Oliveira</h4>
-                  <div className="flex items-center space-x-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="relative">
-                <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
-                  Bom atendimento ótimo trabalho profissional excelente
-                </p>
-              </div>
-            </div>
-            
-            {/* Review 5 */}
-            <div className="bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  M
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Maria Eduarda Oliveira</h4>
-                  <div className="flex items-center space-x-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="relative">
-                <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
-                  Ótimo atendimento, uma empresa que entrega o nosso pedido no prazo certo e um sistema de qualidade, ótima equipe de instalação, recomendo muito porque agora o sol gera minha energia graças a mix energy😉Ótima experiência !
-                </p>
-              </div>
-            </div>
-            
-            {/* 6º depoimento - oculto só no celular (1 coluna); aparece a partir de tablet para fechar a grade */}
-            <div className="hidden md:block bg-white rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  H
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Helio Henrrique Francisco da Silva</h4>
-                  <div className="flex items-center space-x-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="relative">
-                <Quote className="h-6 w-6 text-blue-200 absolute -top-2 -left-2" />
-                <p className="text-gray-700 text-sm leading-relaxed pl-4 indent-4">
-                  A Mix Energy superou minhas expectativas! Atendimento rápido, produtos de qualidade e um ótimo custo-benefício. Recomendo de olhos fechados!
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
           
           {/* Call to Action */}

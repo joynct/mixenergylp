@@ -34,7 +34,7 @@ const LocationSection = () => {
             <div className="text-base text-white">
               <h3 className="text-lg font-bold mb-2">Endereço</h3>
               <p className="text-white/90 leading-relaxed">
-                Av. Pedro Ludovico Teixeira, 16 - lt07/08 - parte c<br />
+                Rua Rui Barbosa, 874 - Sala 1 - Centro<br />
                 Rio Verde - GO, 75906-270
               </p>
             </div>

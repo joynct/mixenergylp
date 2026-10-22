@@ -34,7 +34,7 @@ const PrivacyPolicy = () => {
               1. Informações Gerais
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              A Mix Energy Solar, nome fantasia de Mix Energy LTDA, pessoa jurídica de direito privado inscrita no CNPJ sob o nº 54.882.666/0001-40, com sede na Av. Pedro Ludovico Teixeira, 16 - lt07/08 - parte c, 
+              A Mix Energy Solar, nome fantasia de Mix Energy LTDA, pessoa jurídica de direito privado inscrita no CNPJ sob o nº 54.882.666/0001-40, com sede na Rua Rui Barbosa, 874 - Sala 1 - Centro, 
               Rio Verde - GO, CEP 75906-270, doravante denominada "Mix Energy" ou "Empresa", 
               está comprometida em proteger a privacidade e os dados pessoais de nossos clientes, prospects e visitantes do site.
             </p>
@@ -535,9 +535,8 @@ const PrivacyPolicy = () => {
                     <div>
                       <p className="font-semibold text-blue-950">Endereço Físico</p>
                       <p className="text-sm text-gray-600">
-                        Av. Pedro Ludovico Teixeira, 16<br />
-                        lt07/08 - parte c<br />
-                        Rio Verde - GO, 75906-270
+                        Rua Rui Barbosa, 874 - Sala 1<br />
+                        Centro, Rio Verde - GO, 75906-270
                       </p>
                     </div>
                   </div>

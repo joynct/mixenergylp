@@ -88,9 +88,8 @@ const Footer = () => {
             <div className="flex items-start space-x-2 text-blue-200">
               <MapPin className="h-5 w-5 mt-1" />
               <div>
-                <p>Av. Pedro Ludovico Teixeira, 16</p>
-                <p>lt07/08 - parte c</p>
-                <p>Rio Verde - GO, 75906-270</p>
+                <p>Rua Rui Barbosa, 874 - Sala 1 - Centro</p>
+                <p>Rio Verde - GO, CEP 75906-270</p>
               </div>
             </div>
           </div>
