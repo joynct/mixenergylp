@@ -1,1 +1,12 @@
+# URLs antigas: redirecionamento permanente (301) para as páginas oficiais
+/privacy-policy      /politica-privacidade   301
+/terms-of-service    /termos-uso             301
+/cookie-policy       /politica-cookies       301
+
+# Páginas legais: HTML próprio (com canonical correto) gerado no build
+/politica-privacidade   /route-pages/politica-privacidade.html   200
+/termos-uso             /route-pages/termos-uso.html             200
+/politica-cookies       /route-pages/politica-cookies.html       200
+
+# Demais rotas do site (SPA)
 /*    /index.html   200

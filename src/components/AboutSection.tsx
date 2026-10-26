@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Shield, Users, Zap } from 'lucide-react';
 
 const AboutSection = () => {
-  const headingRef = useRef<HTMLHeadingElement>(null);
-
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -28,15 +26,6 @@ const AboutSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!inView) return;
-    // Remove o cursor depois que a digitação termina (0.5s de atraso + 3s de animação)
-    const timer = setTimeout(() => {
-      headingRef.current?.classList.add('animation-complete');
-    }, 3500);
-    return () => clearTimeout(timer);
-  }, [inView]);
-
   return (
     <section
       id="about"
@@ -58,15 +47,21 @@ const AboutSection = () => {
         
         {/* Text Container */}
         <div className="text-center mb-16">
-          <h2 
-            ref={headingRef}
-            className="text-4xl font-bold mb-6 uppercase bg-gradient-to-r from-orange-500 to-yellow-500 bg-clip-text text-transparent typewriter-text-white"
+          <h2
+            className="text-4xl font-bold mb-6 uppercase"
             style={{ 
               fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif',
               fontSize: '36px'
             }}
           >
-            VAMOS DEIXAR O SOL GERAR SUA ENERGIA!
+            <span className="tw-wrap">
+              {/* texto invisível: só reserva o espaço final do título */}
+              <span className="tw-size" aria-hidden="true" data-text="VAMOS DEIXAR O SOL GERAR SUA ENERGIA!" />
+              <span className="tw-text bg-gradient-to-r from-orange-500 to-yellow-500 bg-clip-text text-transparent">
+                VAMOS DEIXAR O SOL GERAR SUA ENERGIA!
+              </span>
+              <span className="tw-caret" aria-hidden="true" />
+            </span>
           </h2>
           <p className="text-xl mb-4 text-gray-800 fade-in-text fade-in-delay-1">
           </p>

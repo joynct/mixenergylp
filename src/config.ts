@@ -1,7 +1,5 @@
 // Configurações compartilhadas do site
 
-export const SITE_URL = 'https://mixenergysolar.com.br';
-
 export const WHATSAPP_PHONE = '5564992170512';
 
 export const WHATSAPP_DEFAULT_TEXT =
