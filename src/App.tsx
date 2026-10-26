@@ -13,16 +13,14 @@ import Footer from './components/Footer';
 import WhatsAppFloat from './components/WhatsAppFloat';
 import CookieConsent from './components/CookieConsent';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { SITE_URL } from './config';
+import { SEO_ROUTES, SITE_URL } from './seoRoutes';
 const PrivacyPolicy = lazy(() => import('./components/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./components/TermsOfService'));
 const CookiePolicy = lazy(() => import('./components/CookiePolicy'));
 
-const LEGAL_TITLES: Record<string, string> = {
-  '/politica-privacidade': 'Política de Privacidade | Mix Energy Solar',
-  '/termos-uso': 'Termos de Uso | Mix Energy Solar',
-  '/politica-cookies': 'Política de Cookies | Mix Energy Solar',
-};
+const LEGAL_TITLES: Record<string, string> = Object.fromEntries(
+  SEO_ROUTES.map((route) => [route.path, route.title])
+);
 
 // Ajusta título e canonical por rota (o index.html só tem os da home)
 const RouteMeta = () => {
